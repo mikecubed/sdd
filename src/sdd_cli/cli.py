@@ -73,7 +73,8 @@ def template(name: str | None, list_all: bool) -> None:
     except KeyError:
         available = ", ".join(n for n, _ in list_templates())
         raise click.UsageError(
-            f"Unknown template '{name}'. Available: {available}"
+            f"Unknown template '{name}'. Available: {available}. "
+            "Run 'sdd template --list' to see all available templates."
         )
 
     click.echo(content, nl=False)

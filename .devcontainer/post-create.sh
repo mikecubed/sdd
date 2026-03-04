@@ -30,7 +30,7 @@ run_command "pipx install uv"
 echo "✅ Done"
 
 echo -e "\n📦 Installing sdd-cli in development mode..."
-run_command "uv pip install --system -e '.[test]'"
+run_command "uv pip install -e '.[test]'"
 echo "✅ Done"
 
 echo -e "\n🧹 Cleaning cache..."

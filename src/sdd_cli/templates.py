@@ -314,4 +314,4 @@ def get_template(name: str) -> str:
 
 def list_templates() -> list[tuple[str, str]]:
     """Return list of (name, description) tuples for all available templates."""
-    return [(name, _DESCRIPTIONS[name]) for name in _TEMPLATES]
+    return [(name, _DESCRIPTIONS[name]) for name in sorted(_TEMPLATES)]
