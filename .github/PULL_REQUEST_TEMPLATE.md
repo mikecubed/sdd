@@ -6,14 +6,14 @@
 
 <!-- How did you test your changes? -->
 
-- [ ] Tested locally with `uv run specify --help`
+- [ ] Tested locally with `uv run sdd --help`
 - [ ] Ran existing tests with `uv sync && uv run pytest`
 - [ ] Tested with a sample project (if applicable)
 
 ## AI Disclosure
 
 <!-- Per our Contributing guidelines, AI assistance must be disclosed. -->
-<!-- See: https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#ai-contributions-in-spec-kit -->
+<!-- See: https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#ai-contributions-in-sdd-cli -->
 
 - [ ] I **did not** use AI assistance for this contribution
 - [ ] I **did** use AI assistance (describe below)
