@@ -1,6 +1,6 @@
 # sdd — Spec-Driven Development
 
-A lightweight CLI tool that installs the spec-driven development workflow into your project for **Claude Code** and **GitHub Copilot**.
+A lightweight CLI tool that installs the spec-driven development workflow into your project for **Claude Code** and **GitHub Copilot**.  Forked from spec-kit.
 
 ## What it does
 
