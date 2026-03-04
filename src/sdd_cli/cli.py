@@ -1,6 +1,5 @@
 """Click CLI application for sdd-cli."""
 
-import sys
 from pathlib import Path
 
 import click
@@ -10,10 +9,14 @@ from .templates import get_template, list_templates
 
 # Injected by hatchling at build time; fallback for editable installs.
 try:
-    from importlib.metadata import version as _meta_version
-    _VERSION = _meta_version("sdd-cli")
-except Exception:
+    from importlib.metadata import PackageNotFoundError, version as _meta_version
+except ImportError:
     _VERSION = "0.0.0"
+else:
+    try:
+        _VERSION = _meta_version("sdd-cli")
+    except PackageNotFoundError:
+        _VERSION = "0.0.0"
 
 
 @click.group()
@@ -40,11 +43,9 @@ def init(directory: str) -> None:
     print_results(successes, failures, project_dir)
 
     if failures:
-        click.echo(
-            f"\n{len(successes)} file(s) written, {len(failures)} error(s). See stderr for details.",
-            err=True,
+        raise click.ClickException(
+            f"{len(successes)} file(s) written, {len(failures)} error(s). See stderr for details."
         )
-        sys.exit(1)
 
     click.echo(f"\n{len(successes)} file(s) written successfully.")
     click.echo("\nNext steps:")

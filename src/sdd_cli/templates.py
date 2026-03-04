@@ -165,7 +165,7 @@ TASKS_TEMPLATE = """\
 **Input**: Design documents from `.sdd/[feature-dir]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories)
 
-## Format: `[ID] [P?] [Story] Description`
+## Format: `- [ ] T### [P?] [Story] Description`
 
 - **[P]**: Can run in parallel (different files, no dependencies)
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
