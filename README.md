@@ -17,7 +17,7 @@ Files are installed for both **Claude Code** (`.claude/commands/`) and **GitHub 
 ## Install
 
 ```bash
-uv tool install sdd-cli --from git+https://github.com/github/spec-kit.git
+uv tool install sdd-cli --from git+https://github.com/mikecubed/spec-kit.git
 ```
 
 Or in a project venv:
