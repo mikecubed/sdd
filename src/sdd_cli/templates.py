@@ -279,18 +279,31 @@ SPECIFICATION_CHECKLIST_TEMPLATE = """\
 - Items marked incomplete require spec updates before `/sdd.plan`
 """
 
+_TEMPLATE_REGISTRY: dict[str, dict[str, str]] = {
+    "specification": {
+        "content": SPECIFICATION_TEMPLATE,
+        "description": "Feature specification template with user stories and requirements",
+    },
+    "plan": {
+        "content": PLAN_TEMPLATE,
+        "description": "Implementation plan template with technical context and design artifacts",
+    },
+    "tasks": {
+        "content": TASKS_TEMPLATE,
+        "description": "Actionable task list template organized by user story",
+    },
+    "specification-checklist": {
+        "content": SPECIFICATION_CHECKLIST_TEMPLATE,
+        "description": "Quality checklist for validating feature specifications",
+    },
+}
+
 _TEMPLATES: dict[str, str] = {
-    "specification": SPECIFICATION_TEMPLATE,
-    "plan": PLAN_TEMPLATE,
-    "tasks": TASKS_TEMPLATE,
-    "specification-checklist": SPECIFICATION_CHECKLIST_TEMPLATE,
+    name: meta["content"] for name, meta in _TEMPLATE_REGISTRY.items()
 }
 
 _DESCRIPTIONS: dict[str, str] = {
-    "specification": "Feature specification template with user stories and requirements",
-    "plan": "Implementation plan template with technical context and design artifacts",
-    "tasks": "Actionable task list template organized by user story",
-    "specification-checklist": "Quality checklist for validating feature specifications",
+    name: meta["description"] for name, meta in _TEMPLATE_REGISTRY.items()
 }
 
 

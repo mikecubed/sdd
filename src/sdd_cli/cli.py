@@ -42,7 +42,7 @@ def init(directory: str) -> None:
     if failures:
         click.echo(
             f"\n{len(successes)} file(s) written, {len(failures)} error(s). See stderr for details.",
-            file=sys.stderr,
+            err=True,
         )
         sys.exit(1)
 
@@ -71,12 +71,9 @@ def template(name: str | None, list_all: bool) -> None:
         content = get_template(name)
     except KeyError:
         available = ", ".join(n for n, _ in list_templates())
-        click.echo(
-            f"Error: unknown template '{name}'. Available: {available}",
-            file=sys.stderr,
-            err=True,
+        raise click.UsageError(
+            f"Unknown template '{name}'. Available: {available}"
         )
-        sys.exit(1)
 
     click.echo(content, nl=False)
 

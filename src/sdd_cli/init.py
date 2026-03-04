@@ -1,8 +1,9 @@
 """Initialization logic: write agent command and skill files to a project directory."""
 
-import sys
 from pathlib import Path
 from typing import Literal
+
+import click
 
 from .agents import CLAUDE_COMMANDS, COPILOT_COMMANDS
 
@@ -46,7 +47,7 @@ def init_project(project_dir: Path) -> tuple[list[tuple[Path, Status]], list[tup
     # Create the .sdd/ workspace directory (no files, just the dir)
     sdd_dir = project_dir / ".sdd"
     try:
-        sdd_dir.mkdir(exist_ok=True)
+        sdd_dir.mkdir(parents=True, exist_ok=True)
     except OSError as exc:
         failures.append((sdd_dir, str(exc)))
 
@@ -62,11 +63,11 @@ def print_results(
     for path, status in successes:
         rel = path.relative_to(project_dir)
         label = "Created" if status == "created" else "Updated"
-        print(f"  {label}: {rel}")
+        click.echo(f"  {label}: {rel}")
 
     for path, error in failures:
         try:
             rel = str(path.relative_to(project_dir))
         except ValueError:
             rel = str(path)
-        print(f"  Error: {rel}: {error}", file=sys.stderr)
+        click.echo(f"  Error: {rel}: {error}", err=True)
