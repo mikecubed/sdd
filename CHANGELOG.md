@@ -16,4 +16,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Headless mode support in all slash commands (`--headless`)
 - Next-step handoffs after each command (iterate, proceed, or attempt direct implementation)
 - Single runtime dependency: `click>=8.0`
-- Python 3.10+ support
+- Python 3.12+ support

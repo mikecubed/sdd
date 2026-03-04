@@ -8,7 +8,7 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 These are one time installations required to be able to test your changes locally as part of the pull request (PR) submission process.
 
-1. Install [Python 3.10+](https://www.python.org/downloads/)
+1. Install [Python 3.12+](https://www.python.org/downloads/)
 1. Install [uv](https://docs.astral.sh/uv/) for package management
 1. Install [Git](https://git-scm.com/downloads)
 1. Have an [AI coding agent available](README.md#supported-ai-agents)

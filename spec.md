@@ -16,7 +16,7 @@ A developer installs the new tool and runs the `init` command in their project d
 
 **Acceptance Scenarios**:
 
-1. **Given** a Python 3.10+ environment with the tool installed, **When** a developer runs the init command in any directory, **Then** the tool creates a workspace directory and installs command files for Claude Code (`.claude/commands/`) and GitHub Copilot (`.github/agents/`) without making any network requests or running any shell scripts.
+1. **Given** a Python 3.12+ environment with the tool installed, **When** a developer runs the init command in any directory, **Then** the tool creates a workspace directory and installs command files for Claude Code (`.claude/commands/`) and GitHub Copilot (`.github/agents/`) without making any network requests or running any shell scripts.
 2. **Given** a project directory with no git repository, **When** the developer runs the init command, **Then** initialization succeeds without errors because the tool does not depend on git.
 3. **Given** a project where the init command was previously run, **When** the developer runs it again, **Then** existing files are updated in place and status messages indicate "Updated" for each file.
 4. **Given** a project directory with existing `.github/workflows/` or `.claude/settings/` content, **When** the developer runs the init command, **Then** only the agent command subdirectories are created or modified; all other content is left untouched.
@@ -169,7 +169,7 @@ A developer returning to a project wants to find existing feature specifications
 - **FR-019**: System MUST use a modular source layout with separate Python files for CLI entry point, initialization logic, template registry, and agent command content.
 - **FR-020**: System MUST store all templates and command content as embedded Python string constants, not as external files.
 - **FR-021**: System MUST have exactly one runtime dependency: click (version 8.0 or higher).
-- **FR-022**: System MUST support Python 3.10 or higher (lowered from spec-kit's 3.11 requirement).
+- **FR-022**: System MUST support Python 3.12 or higher.
 - **FR-023**: System MUST use hatchling as the build backend.
 - **FR-024**: System MUST store feature artifacts in a workspace directory using random alphanumeric suffixes instead of sequential numbered directories.
 

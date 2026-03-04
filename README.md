@@ -109,7 +109,7 @@ Each command offers **next-step handoffs** on completion — iterate, proceed to
 - **No git required**: works in any directory, no branch detection
 - **No shell scripts**: pure Python
 - **2 supported agents**: Claude Code + GitHub Copilot (covers both VS Code and Copilot CLI)
-- **Python 3.10+**
+- **Python 3.12+**
 
 ## License
 
