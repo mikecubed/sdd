@@ -1,31 +1,25 @@
 # Security Policy
 
-Thanks for helping make GitHub safe for everyone.
-
-GitHub takes the security of our software products and services seriously, including all of the open source code repositories managed through our GitHub organizations, such as [GitHub](https://github.com/GitHub).
-
-Even though [open source repositories are outside of the scope of our bug bounty program](https://bounty.github.com/index.html#scope) and therefore not eligible for bounty rewards, we will ensure that your finding gets passed along to the appropriate maintainers for remediation.
-
 ## Reporting Security Issues
 
-If you believe you have found a security vulnerability in any GitHub-owned repository, please report it to us through coordinated disclosure.
+**Please do not report security vulnerabilities through public GitHub issues.**
 
-**Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**
+If you believe you have found a security vulnerability in sdd-cli, please open a [GitHub Security Advisory](https://github.com/mikecubed/spec-kit/security/advisories/new) to report it privately.
 
-Instead, please send an email to opensource-security[@]github.com.
+Please include as much of the following as possible:
 
-Please include as much of the information listed below as you can to help us better understand and resolve the issue:
+- A description of the vulnerability and its potential impact
+- Steps to reproduce the issue
+- Any relevant source file paths, tags, branches, or commit SHAs
+- Proof-of-concept code (if applicable)
 
-- The type of issue (e.g., buffer overflow, SQL injection, or cross-site scripting)
-- Full paths of source file(s) related to the manifestation of the issue
-- The location of the affected source code (tag/branch/commit or direct URL)
-- Any special configuration required to reproduce the issue
-- Step-by-step instructions to reproduce the issue
-- Proof-of-concept or exploit code (if possible)
-- Impact of the issue, including how an attacker might exploit the issue
+## Scope
 
-This information will help us triage your report more quickly.
+sdd-cli is a local CLI tool that writes files to disk. It makes no network calls and has no authentication surface. Security issues most likely to apply:
+
+- Path traversal vulnerabilities in file-writing logic
+- Dependency vulnerabilities in `click` or the Python stdlib
 
 ## Policy
 
-See [GitHub's Safe Harbor Policy](https://docs.github.com/en/site-policy/security-policies/github-bug-bounty-program-legal-safe-harbor#1-safe-harbor-terms)
+We will acknowledge reports within 7 days and aim to resolve confirmed vulnerabilities before public disclosure.

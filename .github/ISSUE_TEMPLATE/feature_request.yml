@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest a new feature or enhancement for Specify CLI or Spec Kit
+description: Suggest a new feature or enhancement for sdd-cli
 title: "[Feature]: "
 labels: ["enhancement", "needs-triage"]
 body:
@@ -39,10 +39,9 @@ body:
       label: Component
       description: Which component does this feature relate to?
       options:
-        - Specify CLI (initialization, commands)
-        - Spec templates (BDD, Testing Strategy, etc.)
-        - Agent integrations (command files, workflows)
-        - Scripts (Bash/PowerShell utilities)
+        - sdd CLI (init, template, list commands)
+        - Spec templates (spec, plan, tasks)
+        - Agent integrations (Claude Code, GitHub Copilot)
         - Documentation
         - CI/CD workflows
         - Other
@@ -57,23 +56,7 @@ body:
       options:
         - All agents
         - Claude Code
-        - Gemini CLI
         - GitHub Copilot
-        - Cursor
-        - Qwen Code
-        - opencode
-        - Codex CLI
-        - Windsurf
-        - Kilo Code
-        - Auggie CLI
-        - Roo Code
-        - CodeBuddy
-        - Qoder CLI
-        - Kiro CLI
-        - Amp
-        - SHAI
-        - IBM Bob
-        - Antigravity
         - Not applicable
 
   - type: textarea
