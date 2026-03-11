@@ -78,7 +78,7 @@ def init(directory: str, force_claude: bool, force_copilot: bool) -> None:
         click.echo("  sdd init --claude          Claude Code commands")
         click.echo("  sdd init --copilot         GitHub Copilot agents")
         click.echo("  sdd init --claude --copilot  Both")
-        raise SystemExit(1)
+        raise click.Exit(1)
 
     click.echo()
     successes, failures = init_project(project_dir, platforms)

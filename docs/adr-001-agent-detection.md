@@ -23,7 +23,8 @@ problems:
 Make `sdd init` smart by default, with explicit override flags for scripting:
 
 - **Claude Code**: detected via `shutil.which("claude")`. Binary presence is authoritative —
-  if found, install silently; if not found, skip silently. No prompt needed.
+  if found, install with a status line; if not found, print a skip notice and a hint to use
+  `--claude`. No prompt needed.
 - **GitHub Copilot**: no reliable CLI binary exists (Copilot is typically a VS Code extension).
   Detection via `shutil.which("copilot")` runs first; if not found, fall back to a
   `click.confirm()` prompt since the user may still want the files.

@@ -42,7 +42,17 @@ def init_project(
         "claude":  (project_dir / ".claude",  CLAUDE_COMMANDS),
         "copilot": (project_dir / ".github",   COPILOT_COMMANDS),
     }
-    selected = platforms if platforms is not None else set(all_platforms)
+    valid_keys = set(all_platforms)
+    if platforms is not None:
+        unknown = platforms - valid_keys
+        if unknown:
+            unknown_list = ", ".join(sorted(unknown))
+            valid_list = ", ".join(sorted(valid_keys))
+            raise ValueError(
+                f"Unknown platform key(s): {unknown_list}. "
+                f"Valid platforms are: {valid_list}."
+            )
+    selected = platforms if platforms is not None else valid_keys
     agent_dirs = {base: cmds for k, (base, cmds) in all_platforms.items() if k in selected}
 
     for base_dir, commands in agent_dirs.items():

@@ -143,3 +143,8 @@ class TestInitPlatformSelection:
         init_project(tmp_project, None)
         assert (tmp_project / ".claude" / "commands" / "sdd.specify.md").exists()
         assert (tmp_project / ".github" / "agents" / "sdd.specify.md").exists()
+
+    def test_unknown_platform_key_raises(self, tmp_project):
+        import pytest
+        with pytest.raises(ValueError, match="Unknown platform key"):
+            init_project(tmp_project, {"cursor"})
