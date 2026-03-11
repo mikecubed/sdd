@@ -18,9 +18,17 @@ def _write_file(path: Path, content: str) -> Status:
     return status
 
 
-def init_project(project_dir: Path) -> tuple[list[tuple[Path, Status]], list[tuple[Path, str]]]:
+def init_project(
+    project_dir: Path,
+    platforms: set[str] | None = None,
+) -> tuple[list[tuple[Path, Status]], list[tuple[Path, str]]]:
     """
-    Write all agent command and skill files into project_dir.
+    Write agent command and skill files into project_dir.
+
+    Args:
+        project_dir: The project root directory.
+        platforms: Set of platform keys to install (``"claude"``, ``"copilot"``).
+                   Pass ``None`` to install all platforms.
 
     Returns:
         (successes, failures) where:
@@ -30,10 +38,22 @@ def init_project(project_dir: Path) -> tuple[list[tuple[Path, Status]], list[tup
     successes: list[tuple[Path, Status]] = []
     failures: list[tuple[Path, str]] = []
 
-    agent_dirs = {
-        project_dir / ".claude": CLAUDE_COMMANDS,
-        project_dir / ".github": COPILOT_COMMANDS,
+    all_platforms = {
+        "claude":  (project_dir / ".claude",  CLAUDE_COMMANDS),
+        "copilot": (project_dir / ".github",   COPILOT_COMMANDS),
     }
+    valid_keys = set(all_platforms)
+    if platforms is not None:
+        unknown = platforms - valid_keys
+        if unknown:
+            unknown_list = ", ".join(sorted(unknown))
+            valid_list = ", ".join(sorted(valid_keys))
+            raise ValueError(
+                f"Unknown platform key(s): {unknown_list}. "
+                f"Valid platforms are: {valid_list}."
+            )
+    selected = platforms if platforms is not None else valid_keys
+    agent_dirs = {base: cmds for k, (base, cmds) in all_platforms.items() if k in selected}
 
     for base_dir, commands in agent_dirs.items():
         for rel_path, content in commands.items():

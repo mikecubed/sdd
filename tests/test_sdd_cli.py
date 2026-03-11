@@ -1,5 +1,7 @@
 """Tests for sdd CLI basics: version, help, exit codes, stderr."""
 
+from unittest.mock import patch
+
 import pytest
 from click.testing import CliRunner
 
@@ -36,6 +38,16 @@ class TestHelp:
         result = runner.invoke(cli, ["init", "--help"])
         assert result.exit_code == 0
 
+    def test_init_help_shows_claude_flag(self, runner):
+        result = runner.invoke(cli, ["init", "--help"])
+        assert result.exit_code == 0
+        assert "--claude" in result.output
+
+    def test_init_help_shows_copilot_flag(self, runner):
+        result = runner.invoke(cli, ["init", "--help"])
+        assert result.exit_code == 0
+        assert "--copilot" in result.output
+
     def test_template_help(self, runner):
         result = runner.invoke(cli, ["template", "--help"])
         assert result.exit_code == 0
@@ -46,9 +58,9 @@ class TestHelp:
 
 
 class TestExitCodes:
-    def test_success_exit_zero(self, runner, tmp_path):
+    def test_success_exit_zero_with_claude_flag(self, runner, tmp_path):
         """FR-027: exit 0 on success."""
-        result = runner.invoke(cli, ["init", str(tmp_path)])
+        result = runner.invoke(cli, ["init", "--claude", str(tmp_path)])
         assert result.exit_code == 0
 
     def test_template_success_exit_zero(self, runner):
@@ -78,3 +90,84 @@ class TestNoDependencyLeaks:
         # No git CLI invocations (e.g., "git checkout", "git branch")
         assert '"git ' not in source
         assert "'git " not in source
+
+
+class TestInitFlags:
+    def test_claude_flag_installs_only_claude_files(self, runner, tmp_path):
+        result = runner.invoke(cli, ["init", "--claude", str(tmp_path)])
+        assert result.exit_code == 0
+        assert (tmp_path / ".claude" / "commands" / "sdd.specify.md").exists()
+        assert not (tmp_path / ".github").exists()
+
+    def test_copilot_flag_installs_only_copilot_files(self, runner, tmp_path):
+        result = runner.invoke(cli, ["init", "--copilot", str(tmp_path)])
+        assert result.exit_code == 0
+        assert (tmp_path / ".github" / "agents" / "sdd.specify.md").exists()
+        assert not (tmp_path / ".claude").exists()
+
+    def test_both_flags_installs_both(self, runner, tmp_path):
+        result = runner.invoke(cli, ["init", "--claude", "--copilot", str(tmp_path)])
+        assert result.exit_code == 0
+        assert (tmp_path / ".claude" / "commands" / "sdd.specify.md").exists()
+        assert (tmp_path / ".github" / "agents" / "sdd.specify.md").exists()
+
+    def test_both_flags_no_detection_output(self, runner, tmp_path):
+        result = runner.invoke(cli, ["init", "--claude", "--copilot", str(tmp_path)])
+        assert result.exit_code == 0
+        assert "found in PATH" not in result.output
+        assert "not found in PATH" not in result.output
+
+
+class TestInitDetectionFlow:
+    def test_default_installs_claude_when_detected(self, runner, tmp_path):
+        with patch("sdd_cli.cli.detect_claude", return_value=True), \
+             patch("sdd_cli.cli.detect_copilot", return_value=False):
+            result = runner.invoke(cli, ["init", str(tmp_path)], input="n\n")
+        assert result.exit_code == 0
+        assert (tmp_path / ".claude" / "commands" / "sdd.specify.md").exists()
+        assert "\u2713 claude found" in result.output
+
+    def test_default_skips_claude_when_not_detected(self, runner, tmp_path):
+        with patch("sdd_cli.cli.detect_claude", return_value=False), \
+             patch("sdd_cli.cli.detect_copilot", return_value=False):
+            result = runner.invoke(cli, ["init", str(tmp_path)], input="n\n")
+        assert result.exit_code != 0
+        assert "\u2717 claude not found" in result.output
+
+    def test_default_installs_copilot_when_detected(self, runner, tmp_path):
+        with patch("sdd_cli.cli.detect_claude", return_value=False), \
+             patch("sdd_cli.cli.detect_copilot", return_value=True):
+            result = runner.invoke(cli, ["init", str(tmp_path)])
+        assert result.exit_code == 0
+        assert (tmp_path / ".github" / "agents" / "sdd.specify.md").exists()
+        assert "\u2713 copilot found" in result.output
+
+    def test_default_prompts_for_copilot_when_not_detected(self, runner, tmp_path):
+        with patch("sdd_cli.cli.detect_claude", return_value=True), \
+             patch("sdd_cli.cli.detect_copilot", return_value=False):
+            result = runner.invoke(cli, ["init", str(tmp_path)], input="y\n")
+        assert result.exit_code == 0
+        assert (tmp_path / ".github" / "agents" / "sdd.specify.md").exists()
+
+    def test_nothing_to_install_exits_nonzero(self, runner, tmp_path):
+        with patch("sdd_cli.cli.detect_claude", return_value=False), \
+             patch("sdd_cli.cli.detect_copilot", return_value=False):
+            result = runner.invoke(cli, ["init", str(tmp_path)], input="n\n")
+        assert result.exit_code != 0
+        assert "Nothing to install" in result.output
+
+    def test_nothing_to_install_shows_flag_hints(self, runner, tmp_path):
+        with patch("sdd_cli.cli.detect_claude", return_value=False), \
+             patch("sdd_cli.cli.detect_copilot", return_value=False):
+            result = runner.invoke(cli, ["init", str(tmp_path)], input="n\n")
+        assert "--claude" in result.output
+        assert "--copilot" in result.output
+
+    def test_both_detected_no_prompt_shown(self, runner, tmp_path):
+        with patch("sdd_cli.cli.detect_claude", return_value=True), \
+             patch("sdd_cli.cli.detect_copilot", return_value=True):
+            result = runner.invoke(cli, ["init", str(tmp_path)])
+        assert result.exit_code == 0
+        assert (tmp_path / ".claude" / "commands" / "sdd.specify.md").exists()
+        assert (tmp_path / ".github" / "agents" / "sdd.specify.md").exists()
+        assert "install GitHub Copilot agents anyway" not in result.output

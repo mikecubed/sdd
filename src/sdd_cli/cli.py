@@ -4,6 +4,7 @@ from pathlib import Path
 
 import click
 
+from .detect import detect_claude, detect_copilot
 from .init import init_project, print_results
 from .templates import get_template, list_templates
 
@@ -27,19 +28,60 @@ def cli() -> None:
 
 @cli.command()
 @click.argument("directory", default=".", type=click.Path(file_okay=False))
-def init(directory: str) -> None:
+@click.option("--claude", "force_claude", is_flag=True,
+              help="Install Claude Code files (skips detection).")
+@click.option("--copilot", "force_copilot", is_flag=True,
+              help="Install GitHub Copilot files (skips prompts).")
+def init(directory: str, force_claude: bool, force_copilot: bool) -> None:
     """Initialize sdd in a project directory.
 
-    Installs Claude Code and GitHub Copilot command files and creates the .sdd/
-    workspace directory. Safe to re-run — existing files are updated in place.
+    Installs agent command files and creates the .sdd/ workspace directory.
+    Safe to re-run — existing files are updated in place.
+
+    By default, detects installed agents automatically. Use --claude or
+    --copilot to install specific agents without detection or prompts.
 
     DIRECTORY defaults to the current directory.
     """
     project_dir = Path(directory).resolve()
 
-    click.echo(f"Initializing sdd in {project_dir}")
+    click.echo(f"\nInitializing sdd in {project_dir}\n")
 
-    successes, failures = init_project(project_dir)
+    if force_claude or force_copilot:
+        platforms: set[str] = set()
+        if force_claude:
+            platforms.add("claude")
+        if force_copilot:
+            platforms.add("copilot")
+    else:
+        platforms = set()
+
+        if detect_claude():
+            click.echo("  \u2713 claude found \u2014 installing Claude Code commands")
+            platforms.add("claude")
+        else:
+            click.echo("  \u2717 claude not found in PATH \u2014 skipping Claude Code files")
+            click.echo("    (use --claude to install anyway)")
+
+        if detect_copilot():
+            click.echo("  \u2713 copilot found \u2014 installing GitHub Copilot agents")
+            platforms.add("copilot")
+        elif click.confirm(
+            "\n  copilot not found in PATH \u2014 install GitHub Copilot agents anyway?",
+            default=False,
+        ):
+            platforms.add("copilot")
+
+    if not platforms:
+        click.echo("\nNothing to install. No supported agents were detected or selected.")
+        click.echo("\nTo install manually, specify which agents to configure:")
+        click.echo("  sdd init --claude          Claude Code commands")
+        click.echo("  sdd init --copilot         GitHub Copilot agents")
+        click.echo("  sdd init --claude --copilot  Both")
+        raise click.Exit(1)
+
+    click.echo()
+    successes, failures = init_project(project_dir, platforms)
     print_results(successes, failures, project_dir)
 
     if failures:
