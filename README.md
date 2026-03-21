@@ -98,7 +98,7 @@ Smoke-test the plugin path without `sdd` on `PATH`:
 ```bash
 COPILOT_BIN="$(command -v copilot)"
 PATH="/usr/bin:/bin" "$COPILOT_BIN" plugin install ./plugins/sdd-workflow
-PATH="/usr/bin:/bin" "$COPILOT_BIN"
+PATH="/usr/bin:/bin" "$COPILOT_BIN" plugin list
 ```
 
 Then verify the bundled workflow is available with:

@@ -129,7 +129,7 @@ Smoke-test without `sdd` on `PATH`:
 ```bash
 COPILOT_BIN="$(command -v copilot)"
 PATH="/usr/bin:/bin" "$COPILOT_BIN" plugin install ./plugins/sdd-workflow
-PATH="/usr/bin:/bin" "$COPILOT_BIN"
+PATH="/usr/bin:/bin" "$COPILOT_BIN" plugin list
 ```
 
 ## Shared bundle contents

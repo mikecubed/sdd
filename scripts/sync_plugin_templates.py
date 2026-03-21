@@ -29,14 +29,18 @@ PLUGIN_ROOT = REPO_ROOT / "plugins" / "sdd-workflow"
 
 
 def _replace_once(content: str, old: str, new: str) -> str:
-    updated = content.replace(old, new)
-    if updated == content:
+    count = content.count(old)
+    if count == 0:
         raise ValueError(f"Expected prompt snippet not found:\n{old}")
-    return updated
+    if count > 1:
+        raise ValueError(
+            f"Expected prompt snippet to appear exactly once, but found {count} occurrences:\n{old}"
+        )
+    return content.replace(old, new, 1)
 
 
 def _inline_template(name: str) -> str:
-    return f"````md\n{get_template(name).rstrip()}\n````"
+    return f"````md\n{get_template(name).rstrip('\n')}\n````"
 
 
 def _build_claude_specify() -> str:

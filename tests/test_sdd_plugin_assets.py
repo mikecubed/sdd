@@ -5,6 +5,7 @@ import json
 import tomllib
 from pathlib import Path
 
+import pytest
 from sdd_cli.agents import CLAUDE_SKILL_MD, COPILOT_SKILL_MD
 from sdd_cli.templates import get_template
 
@@ -126,3 +127,15 @@ class TestSharedPluginContent:
             assert (plugin_root / relative_path).read_text(encoding="utf-8") == (
                 PLUGIN_ROOT / relative_path
             ).read_text(encoding="utf-8")
+
+    def test_replace_once_rejects_multiple_matches(self):
+        module = _load_sync_module()
+
+        with pytest.raises(ValueError, match="appear exactly once"):
+            module._replace_once("x target y target z", "target", "replacement")
+
+    def test_inline_template_only_strips_trailing_newlines(self, monkeypatch):
+        module = _load_sync_module()
+        monkeypatch.setattr(module, "get_template", lambda _: "line with break  \n\n")
+
+        assert module._inline_template("specification") == "````md\nline with break  \n````"

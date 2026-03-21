@@ -72,7 +72,7 @@ Smoke-test the self-contained bundle with `sdd` absent from `PATH`:
 ```bash
 COPILOT_BIN="$(command -v copilot)"
 PATH="/usr/bin:/bin" "$COPILOT_BIN" plugin install ./plugins/sdd-workflow
-PATH="/usr/bin:/bin" "$COPILOT_BIN"
+PATH="/usr/bin:/bin" "$COPILOT_BIN" plugin list
 ```
 
 Then use `/agent` to run `sdd.specify`, `sdd.plan`, or `sdd.tasks` and confirm the plugin operates from bundled files only.
