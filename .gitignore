@@ -43,7 +43,7 @@ env/
 # Spec Kit-specific files
 .genreleases/
 *.zip
-sdd-*/
+.sdd/*/
 docs/dev
 
 # Extension system
