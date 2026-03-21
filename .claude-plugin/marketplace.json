@@ -1,0 +1,18 @@
+{
+  "name": "sdd-cli",
+  "owner": {
+    "name": "mikecubed"
+  },
+  "metadata": {
+    "description": "Spec-driven development workflow plugins for Claude Code and GitHub Copilot CLI.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "sdd-workflow",
+      "source": "./plugins/sdd-workflow",
+      "description": "Spec-driven development workflow plugin for Claude Code and GitHub Copilot CLI.",
+      "version": "0.1.0"
+    }
+  ]
+}

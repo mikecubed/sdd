@@ -34,6 +34,11 @@ class TestHelp:
         assert "template" in result.output
         assert "list" in result.output
 
+    def test_help_does_not_show_plugin_command(self, runner):
+        result = runner.invoke(cli, ["--help"])
+        assert result.exit_code == 0
+        assert "\n  plugin" not in result.output
+
     def test_init_help(self, runner):
         result = runner.invoke(cli, ["init", "--help"])
         assert result.exit_code == 0
@@ -69,6 +74,10 @@ class TestExitCodes:
 
     def test_unknown_command_exits_nonzero(self, runner):
         result = runner.invoke(cli, ["bogus-command"])
+        assert result.exit_code != 0
+
+    def test_plugin_command_exits_nonzero(self, runner):
+        result = runner.invoke(cli, ["plugin"])
         assert result.exit_code != 0
 
 

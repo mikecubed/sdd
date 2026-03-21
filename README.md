@@ -1,8 +1,13 @@
 # sdd — Spec-Driven Development
 
-A lightweight CLI tool that installs the spec-driven development workflow into your project for **Claude Code** and **GitHub Copilot**.  Forked from spec-kit.
+A lightweight CLI tool that installs the spec-driven development workflow into your project for **Claude Code** and **GitHub Copilot**. Forked from spec-kit.
 
 ## What it does
+
+`sdd` supports two installation paths:
+
+- `sdd init` installs project-local workflow files directly into a repository.
+- This repository also ships a reusable marketplace/plugin bundle under `plugins/sdd-workflow/` for Claude Code and GitHub Copilot CLI.
 
 `sdd init` installs three slash commands into your project:
 
@@ -17,7 +22,7 @@ Files are installed for both **Claude Code** (`.claude/commands/`) and **GitHub 
 ## Install
 
 ```bash
-uv tool install sdd-cli --from git+https://github.com/mikecubed/spec-kit.git
+uv tool install sdd-cli --from git+https://github.com/mikecubed/sdd.git
 ```
 
 Or in a project venv:
@@ -28,7 +33,7 @@ pip install sdd-cli
 ## Quick start
 
 ```bash
-# Initialize sdd in your project
+# Direct install into a project
 sdd init
 
 # In Claude Code:
@@ -37,6 +42,59 @@ sdd init
 # In GitHub Copilot (VS Code or CLI):
 @workspace /sdd.specify Add user authentication
 ```
+
+## Plugin and marketplace install
+
+Use the repository-hosted plugin bundle when you want the workflow available across multiple projects without writing `.claude/` or `.github/` files into each repo.
+
+### Claude Code
+
+Add this repository as a marketplace:
+
+```text
+/plugin marketplace add mikecubed/sdd
+/plugin install sdd-workflow@sdd-cli
+/reload-plugins
+```
+
+For local testing from a checkout:
+
+```bash
+claude --plugin-dir ./plugins/sdd-workflow
+```
+
+Then try:
+
+```text
+/sdd-workflow:sdd.specify Add user authentication
+```
+
+### GitHub Copilot CLI
+
+Add this repository as a marketplace:
+
+```bash
+copilot plugin marketplace add mikecubed/sdd
+copilot plugin install sdd-workflow@sdd-cli
+```
+
+For local testing from a checkout:
+
+```bash
+copilot plugin install ./plugins/sdd-workflow
+```
+
+Then verify the bundled workflow is available with:
+
+```text
+/plugin list
+/agent
+/skills list
+```
+
+Then select `sdd.specify`, `sdd.plan`, or `sdd.tasks` from `/agent` and enter your prompt.
+
+See `docs/plugin-distribution.md` for the full direct-vs-plugin guidance and local validation steps.
 
 ## Commands
 
@@ -101,6 +159,25 @@ Feature artifacts are stored in `.sdd/{feature-name}-{random8}/`:
 ```
 
 Each command offers **next-step handoffs** on completion — iterate, proceed to the next command, or attempt direct implementation. Every command also supports **headless mode** (add `headless` to your message) to auto-accept defaults without prompts.
+
+## Repository-hosted plugin layout
+
+This repository can also act as a plugin marketplace source:
+
+```text
+.claude-plugin/marketplace.json
+.github/plugin/marketplace.json
+plugins/
+  sdd-workflow/
+    .claude-plugin/plugin.json
+    plugin.json
+    commands/
+    skills/
+    copilot-skills/
+    agents/
+```
+
+Use direct installation when the workflow should live inside a specific repository. Use the plugin bundle when you want one reusable install source for Claude Code, GitHub Copilot CLI, or both.
 
 ## Design principles
 

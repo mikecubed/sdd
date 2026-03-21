@@ -1,0 +1,12 @@
+{
+  "name": "sdd-workflow",
+  "description": "Spec-driven development workflow plugin for GitHub Copilot CLI.",
+  "version": "0.1.0",
+  "author": {
+    "name": "mikecubed"
+  },
+  "agents": "agents/",
+  "skills": [
+    "copilot-skills/"
+  ]
+}
