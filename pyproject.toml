@@ -1,6 +1,6 @@
 [project]
 name = "sdd-cli"
-version = "0.1.0"
+version = "0.2.0"
 description = "sdd — A lightweight Spec-Driven Development workflow tool for Claude Code and GitHub Copilot."
 requires-python = ">=3.12"
 dependencies = [
@@ -42,4 +42,3 @@ omit = ["*/tests/*", "*/__pycache__/*"]
 precision = 2
 show_missing = true
 skip_covered = false
-
