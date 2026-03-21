@@ -89,7 +89,7 @@ def _build_claude_specify() -> str:
    Fill it with pass/fail status based on the validation above.""",
         f"""9. **Write quality checklist** to `.sdd/{{feature-dir}}/checklists/requirements.md` using the embedded template below:
    {_inline_template("specification-checklist")}
-    Fill it with pass/fail status based on the validation above.""",
+   Fill it with pass/fail status based on the validation above.""",
     )
     return _replace_all(content, CLAUDE_PLUGIN_REPLACEMENTS)
 

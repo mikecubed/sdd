@@ -170,7 +170,7 @@ Given the feature description in `$ARGUMENTS`, do this:
 
 - Items marked incomplete require spec updates before `/sdd-workflow:sdd.plan`
 ````
-    Fill it with pass/fail status based on the validation above.
+   Fill it with pass/fail status based on the validation above.
 
 10. **Report completion** with:
     - Feature directory path

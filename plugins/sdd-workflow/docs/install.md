@@ -1,6 +1,6 @@
 # Install the sdd-workflow plugin
 
-The plugin bundle is self-contained at runtime. After installation, Claude Code and GitHub Copilot read generated workflow prompts from `plugins/sdd-workflow/`; those prompt assets carry the canonical templates inline, so they do not invoke `sdd template ...` or require the `sdd` binary on `PATH`.
+The plugin bundle is self-contained at runtime. After installation, Claude Code and GitHub Copilot load the generated workflow prompts from the installed plugin bundle. For a local checkout, that bundle is `./plugins/sdd-workflow/` when you use `--plugin-dir` or `copilot plugin install ./plugins/sdd-workflow`. Those prompt assets carry the canonical templates inline, so they do not invoke `sdd template ...` or require the `sdd` binary on `PATH`.
 
 ## Claude Code
 
@@ -8,6 +8,13 @@ From a local checkout:
 
 ```bash
 claude --plugin-dir ./plugins/sdd-workflow
+```
+
+Smoke-test the local self-contained bundle with `sdd` absent from `PATH`:
+
+```bash
+CLAUDE_BIN="$(command -v claude)"
+PATH="/usr/bin:/bin" "$CLAUDE_BIN" --plugin-dir ./plugins/sdd-workflow
 ```
 
 After Claude starts, reload plugins if needed:
@@ -29,11 +36,11 @@ From the repository marketplace:
 /plugin install sdd-workflow@sdd-cli
 ```
 
-Smoke-test the self-contained bundle with `sdd` absent from `PATH`:
+Smoke-test the installed marketplace plugin with `sdd` absent from `PATH`:
 
 ```bash
 CLAUDE_BIN="$(command -v claude)"
-PATH="/usr/bin:/bin" "$CLAUDE_BIN" --plugin-dir ./plugins/sdd-workflow
+PATH="/usr/bin:/bin" "$CLAUDE_BIN"
 ```
 
 Then run:

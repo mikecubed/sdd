@@ -123,6 +123,13 @@ class TestSharedPluginContent:
         copilot_content = (PLUGIN_ROOT / "agents" / "sdd.specify.md").read_text(encoding="utf-8")
         assert "/agent`, choose `sdd.plan`" in copilot_content
 
+    def test_claude_specify_prompt_renders_checklist_followup_as_list_text(self):
+        expected_line = "   Fill it with pass/fail status based on the validation above."
+        content = (PLUGIN_ROOT / "commands" / "sdd.specify.md").read_text(encoding="utf-8")
+
+        assert expected_line in content
+        assert f"\n    Fill it with pass/fail status based on the validation above." not in content
+
     def test_plugin_bundle_no_longer_ships_template_directory(self):
         assert not (PLUGIN_ROOT / "templates").exists()
 
