@@ -47,6 +47,8 @@ sdd init
 
 Use the repository-hosted plugin bundle when you want the workflow available across multiple projects without writing `.claude/` or `.github/` files into each repo.
 
+The plugin bundle is self-contained at runtime: Claude Code and GitHub Copilot CLI use generated prompt assets with the canonical templates inlined, so plugin runtime does not require the `sdd` binary on `PATH`.
+
 ### Claude Code
 
 Add this repository as a marketplace:
@@ -69,6 +71,13 @@ Then try:
 /sdd-workflow:sdd.specify Add user authentication
 ```
 
+Smoke-test the plugin path without `sdd` on `PATH`:
+
+```bash
+CLAUDE_BIN="$(command -v claude)"
+PATH="/usr/bin:/bin" "$CLAUDE_BIN" --plugin-dir ./plugins/sdd-workflow
+```
+
 ### GitHub Copilot CLI
 
 Add this repository as a marketplace:
@@ -84,6 +93,14 @@ For local testing from a checkout:
 copilot plugin install ./plugins/sdd-workflow
 ```
 
+Smoke-test the plugin path without `sdd` on `PATH`:
+
+```bash
+COPILOT_BIN="$(command -v copilot)"
+PATH="/usr/bin:/bin" "$COPILOT_BIN" plugin install ./plugins/sdd-workflow
+PATH="/usr/bin:/bin" "$COPILOT_BIN" plugin list
+```
+
 Then verify the bundled workflow is available with:
 
 ```text
@@ -95,6 +112,18 @@ Then verify the bundled workflow is available with:
 Then select `sdd.specify`, `sdd.plan`, or `sdd.tasks` from `/agent` and enter your prompt.
 
 See `docs/plugin-distribution.md` for the full direct-vs-plugin guidance and local validation steps.
+
+If you update canonical templates in `src/sdd_cli/templates.py` or the direct-install prompt sources in `src/sdd_cli/agents.py`, regenerate the repository-hosted plugin prompt assets from the repository root with:
+
+```bash
+uv run python scripts/sync_plugin_templates.py
+```
+
+Recommended validation for plugin-template changes:
+
+```bash
+uv run --extra test python -m pytest tests/
+```
 
 ## Commands
 
