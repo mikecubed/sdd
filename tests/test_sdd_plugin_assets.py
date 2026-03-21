@@ -27,17 +27,17 @@ PLUGIN_PROMPT_PATHS = {
 }
 PLUGIN_PROMPT_TEMPLATE_REFS = {
     "claude-specify": [
-        "templates/specification.md",
-        "templates/specification-checklist.md",
+        "../templates/specification.md",
+        "../templates/specification-checklist.md",
     ],
-    "claude-plan": ["templates/plan.md"],
-    "claude-tasks": ["templates/tasks.md"],
+    "claude-plan": ["../templates/plan.md"],
+    "claude-tasks": ["../templates/tasks.md"],
     "copilot-specify": [
-        "templates/specification.md",
-        "templates/specification-checklist.md",
+        "../templates/specification.md",
+        "../templates/specification-checklist.md",
     ],
-    "copilot-plan": ["templates/plan.md"],
-    "copilot-tasks": ["templates/tasks.md"],
+    "copilot-plan": ["../templates/plan.md"],
+    "copilot-tasks": ["../templates/tasks.md"],
 }
 
 
@@ -104,6 +104,7 @@ class TestSharedPluginContent:
             assert "sdd template" not in content
             for template_reference in PLUGIN_PROMPT_TEMPLATE_REFS[prompt_name]:
                 assert template_reference in content
+                assert (path.parent / template_reference).resolve().exists()
 
     def test_claude_plugin_skill_matches_embedded_asset(self):
         assert (

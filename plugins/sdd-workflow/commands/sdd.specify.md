@@ -23,7 +23,7 @@ Given the feature description in `$ARGUMENTS`, do this:
 
 3. **Create the feature directory** and all required parent directories.
 
-4. **Load the bundled specification template** from `templates/specification.md`.
+4. **Load the bundled specification template** from `../templates/specification.md` relative to this prompt file.
 
 5. **Generate the specification** by filling the template:
    - Replace `[FEATURE NAME]` with a human-readable feature name
@@ -47,7 +47,7 @@ Given the feature description in `$ARGUMENTS`, do this:
    - Wait for answers, update spec, re-validate
    - If after 3 iterations issues remain, document them in spec notes and continue
 
-9. **Write quality checklist** to `.sdd/{feature-dir}/checklists/requirements.md` using `templates/specification-checklist.md`.
+9. **Write quality checklist** to `.sdd/{feature-dir}/checklists/requirements.md` using `../templates/specification-checklist.md` relative to this prompt file.
    Fill it with pass/fail status based on the validation above.
 
 10. **Report completion** with:

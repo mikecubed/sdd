@@ -21,7 +21,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 3. **Load the specification**: Read `.sdd/{feature-dir}/spec.md`
 
-4. **Load the bundled plan template** from `templates/plan.md`.
+4. **Load the bundled plan template** from `../templates/plan.md` relative to this prompt file.
 
 5. **Research phase** — for each NEEDS CLARIFICATION in the technical context:
    - Research the unknown using available context and best practices

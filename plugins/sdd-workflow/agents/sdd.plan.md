@@ -29,7 +29,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 3. **Load the specification**: Read `.sdd/{feature-dir}/spec.md`
 
-4. **Load the bundled plan template** from `templates/plan.md`.
+4. **Load the bundled plan template** from `../templates/plan.md` relative to this prompt file.
 
 5. **Fill the plan template**:
    - Technical context (language, deps, storage, testing, platform, type, goals, constraints)

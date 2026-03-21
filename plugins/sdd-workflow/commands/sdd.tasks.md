@@ -23,7 +23,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - **Required**: `plan.md`, `spec.md`
    - **Optional**: `data-model.md`, `contracts/`, `research.md`
 
-4. **Load the bundled tasks template** from `templates/tasks.md`.
+4. **Load the bundled tasks template** from `../templates/tasks.md` relative to this prompt file.
 
 5. **Generate the task list**:
    - Extract user stories from spec.md (with their priorities P1, P2, P3...)
