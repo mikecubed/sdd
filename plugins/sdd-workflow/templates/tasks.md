@@ -1,0 +1,82 @@
+# Tasks: [FEATURE NAME]
+
+**Input**: Design documents from `.sdd/[feature-dir]/`
+**Prerequisites**: plan.md (required), spec.md (required for user stories)
+
+## Format: `- [ ] T### [P?] [Story] Description`
+
+- **[P]**: Can run in parallel (different files, no dependencies)
+- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
+- Include exact file paths in descriptions
+
+## Phase 1: Setup
+
+**Purpose**: Project initialization and basic structure
+
+- [ ] T001 Create project structure per implementation plan
+- [ ] T002 Initialize project with required dependencies
+- [ ] T003 [P] Configure linting and formatting tools
+
+---
+
+## Phase 2: Foundational
+
+**Purpose**: Core infrastructure that MUST be complete before ANY user story
+
+**⚠️ CRITICAL**: No user story work can begin until this phase is complete
+
+- [ ] T004 Setup core infrastructure (database, auth, etc.)
+- [ ] T005 [P] Implement shared utilities
+- [ ] T006 Configure error handling and logging
+
+**Checkpoint**: Foundation ready — user story implementation can now begin
+
+---
+
+## Phase 3: User Story 1 - [Title] (Priority: P1) 🎯 MVP
+
+**Goal**: [Brief description of what this story delivers]
+
+**Independent Test**: [How to verify this story works on its own]
+
+- [ ] T007 [P] [US1] Create [Entity1] model in src/models/[entity1].py
+- [ ] T008 [P] [US1] Create [Entity2] model in src/models/[entity2].py
+- [ ] T009 [US1] Implement [Service] in src/services/[service].py
+- [ ] T010 [US1] Implement [feature] in src/[location]/[file].py
+- [ ] T011 [US1] Add validation and error handling
+
+**Checkpoint**: User Story 1 fully functional and independently testable
+
+---
+
+## Phase 4: User Story 2 - [Title] (Priority: P2)
+
+**Goal**: [Brief description]
+
+**Independent Test**: [How to verify this story works on its own]
+
+- [ ] T012 [P] [US2] Create [Entity] model in src/models/[entity].py
+- [ ] T013 [US2] Implement [Service] in src/services/[service].py
+- [ ] T014 [US2] Implement [feature] in src/[location]/[file].py
+
+**Checkpoint**: User Stories 1 AND 2 work independently
+
+---
+
+[Add more user story phases as needed]
+
+---
+
+## Phase N: Polish
+
+- [ ] TXXX [P] Documentation updates
+- [ ] TXXX Code cleanup and refactoring
+- [ ] TXXX Security hardening
+
+---
+
+## Dependencies & Execution Order
+
+- **Setup → Foundational → User Stories (in parallel) → Polish**
+- User stories depend only on Foundational completion; they can run in parallel
+- Within each story: Models → Services → Endpoints → Integration
