@@ -168,9 +168,9 @@ Given the feature description in `$ARGUMENTS`, do this:
 
 ## Notes
 
-- Items marked incomplete require spec updates before `/sdd.plan`
+- Items marked incomplete require spec updates before `/sdd-workflow:sdd.plan`
 ````
-   Fill it with pass/fail status based on the validation above.
+    Fill it with pass/fail status based on the validation above.
 
 10. **Report completion** with:
     - Feature directory path
@@ -181,7 +181,7 @@ Given the feature description in `$ARGUMENTS`, do this:
 
 Present these options to the user (auto-select option 1 in headless mode):
 
-1. **Create Implementation Plan** — run `/sdd.plan` to produce a technical design
+1. **Create Implementation Plan** — run `/sdd-workflow:sdd.plan` to produce a technical design
 2. **Attempt Direct Implementation** — proceed to implement based on spec alone, with this context:
    - Feature: [feature name]
    - Key requirements: [top 3 FRs from spec]

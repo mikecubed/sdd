@@ -170,7 +170,7 @@ Given the feature description in `$ARGUMENTS`, do this:
 
 ## Notes
 
-- Items marked incomplete require spec updates before `/sdd.plan`
+- Items marked incomplete require spec updates before running the `sdd.plan` agent via `/agent`
 ````
 
 10. **Report completion** with feature directory path, spec file path, and checklist summary.
@@ -179,7 +179,7 @@ Given the feature description in `$ARGUMENTS`, do this:
 
 Present these options (auto-select "Create Implementation Plan" in headless mode):
 
-1. **Create Implementation Plan** — run `/sdd.plan`
+1. **Create Implementation Plan** — run `/agent`, choose `sdd.plan`
 2. **Attempt Direct Implementation** — proceed with this context:
    - Feature: [feature name]
    - Key requirements: [top 3 FRs from spec]

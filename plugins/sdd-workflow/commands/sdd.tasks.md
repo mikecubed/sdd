@@ -17,7 +17,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 2. **Locate the feature directory**:
    - If a path or feature name is provided in `$ARGUMENTS`, use it
    - Otherwise, list `.sdd/` and ask the user (or auto-select most recent in headless mode)
-   - If no plan exists: offer to run `/sdd.plan` first, proceed without it, or accept a manual path
+   - If no plan exists: offer to run `/sdd-workflow:sdd.plan` first, proceed without it, or accept a manual path
 
 3. **Load design documents** from `.sdd/{feature-dir}/`:
    - **Required**: `plan.md`, `spec.md`

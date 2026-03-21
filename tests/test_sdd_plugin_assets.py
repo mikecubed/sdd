@@ -6,8 +6,6 @@ import tomllib
 from pathlib import Path
 
 import pytest
-from sdd_cli.agents import CLAUDE_SKILL_MD, COPILOT_SKILL_MD
-from sdd_cli.templates import get_template
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +25,10 @@ PLUGIN_PROMPT_TEMPLATE_NAMES = {
     "copilot-specify": ["specification", "specification-checklist"],
     "copilot-plan": ["plan"],
     "copilot-tasks": ["tasks"],
+}
+PLUGIN_SKILL_PATHS = {
+    "claude-skill": PLUGIN_ROOT / "skills" / "sdd-feature-workflow" / "SKILL.md",
+    "copilot-skill": PLUGIN_ROOT / "copilot-skills" / "sdd-feature-workflow" / "SKILL.md",
 }
 
 
@@ -50,6 +52,17 @@ def _load_sync_module():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _expected_embedded_template(prompt_name: str, template_name: str) -> str:
+    module = _load_sync_module()
+    embedded = module._inline_template(template_name)
+    replacements = (
+        module.CLAUDE_PLUGIN_REPLACEMENTS
+        if prompt_name.startswith("claude-")
+        else module.COPILOT_PLUGIN_REPLACEMENTS
+    )
+    return module._replace_all(embedded, replacements)
 
 
 class TestSharedPluginBundle:
@@ -94,17 +107,21 @@ class TestSharedPluginContent:
             assert "../templates/" not in content
             assert "templates/" not in content
             for template_name in PLUGIN_PROMPT_TEMPLATE_NAMES[prompt_name]:
-                assert get_template(template_name) in content
+                assert _expected_embedded_template(prompt_name, template_name) in content
 
-    def test_claude_plugin_skill_matches_embedded_asset(self):
-        assert (
-            PLUGIN_ROOT / "skills" / "sdd-feature-workflow" / "SKILL.md"
-        ).read_text(encoding="utf-8") == CLAUDE_SKILL_MD
+    def test_plugin_bundle_uses_plugin_specific_command_references(self):
+        for path in [*PLUGIN_PROMPT_PATHS.values(), *PLUGIN_SKILL_PATHS.values()]:
+            content = path.read_text(encoding="utf-8")
 
-    def test_copilot_plugin_skill_matches_embedded_asset(self):
-        assert (
-            PLUGIN_ROOT / "copilot-skills" / "sdd-feature-workflow" / "SKILL.md"
-        ).read_text(encoding="utf-8") == COPILOT_SKILL_MD
+            assert "/sdd.specify" not in content
+            assert "/sdd.plan" not in content
+            assert "/sdd.tasks" not in content
+
+        claude_content = (PLUGIN_ROOT / "commands" / "sdd.specify.md").read_text(encoding="utf-8")
+        assert "/sdd-workflow:sdd.plan" in claude_content
+
+        copilot_content = (PLUGIN_ROOT / "agents" / "sdd.specify.md").read_text(encoding="utf-8")
+        assert "/agent`, choose `sdd.plan`" in copilot_content
 
     def test_plugin_bundle_no_longer_ships_template_directory(self):
         assert not (PLUGIN_ROOT / "templates").exists()
@@ -112,7 +129,10 @@ class TestSharedPluginContent:
     def test_sync_helper_rewrites_prompt_assets_deterministically(self, tmp_path):
         module = _load_sync_module()
         plugin_root = tmp_path / "plugins" / "sdd-workflow"
-        expected_relative_paths = [path.relative_to(PLUGIN_ROOT) for path in PLUGIN_PROMPT_PATHS.values()]
+        expected_relative_paths = [
+            relative_path
+            for relative_path, _builder in module.PROMPT_ASSETS
+        ]
 
         for relative_path in expected_relative_paths:
             output_path = plugin_root / relative_path
