@@ -15,6 +15,7 @@ Use the repository-hosted plugin bundle when:
 - you want one shared install source across multiple repositories
 - you want to install into Claude Code, GitHub Copilot CLI, or both without copying files into each target project
 - you want to test locally before publishing anywhere else
+- you want a self-contained plugin bundle that does not require the `sdd` binary at runtime
 
 ## Direct project install
 
@@ -65,12 +66,21 @@ Local checkout testing:
 claude --plugin-dir ./plugins/sdd-workflow
 ```
 
+The bundle is self-contained for template access. Claude loads prompt assets and `templates/*.md` directly from `plugins/sdd-workflow/`, so runtime execution does not require `sdd` on `PATH`.
+
 The Claude commands are namespaced under the plugin name:
 
 ```text
 /sdd-workflow:sdd.specify Add user authentication
 /sdd-workflow:sdd.plan .sdd/your-feature/spec.md
 /sdd-workflow:sdd.tasks .sdd/your-feature/plan.md
+```
+
+Smoke-test without `sdd` on `PATH`:
+
+```bash
+CLAUDE_BIN="$(command -v claude)"
+PATH="/usr/bin:/bin" "$CLAUDE_BIN" --plugin-dir ./plugins/sdd-workflow
 ```
 
 ### GitHub Copilot CLI
@@ -87,6 +97,8 @@ Local checkout testing:
 ```bash
 copilot plugin install ./plugins/sdd-workflow
 ```
+
+The installed Copilot plugin is also self-contained for template access and does not shell out to `sdd template ...` at runtime.
 
 After installation, verify the plugin is loaded:
 
@@ -112,6 +124,14 @@ For example:
 Add user authentication
 ```
 
+Smoke-test without `sdd` on `PATH`:
+
+```bash
+COPILOT_BIN="$(command -v copilot)"
+PATH="/usr/bin:/bin" "$COPILOT_BIN" plugin install ./plugins/sdd-workflow
+PATH="/usr/bin:/bin" "$COPILOT_BIN"
+```
+
 ## Shared bundle contents
 
 The reusable plugin bundle contains:
@@ -126,6 +146,22 @@ plugins/sdd-workflow/
   agents/
   README.md
   docs/
+```
+
+Bundled template files are included under `plugins/sdd-workflow/templates/` so both plugin runtimes can resolve workflow templates without depending on the CLI binary.
+
+## Maintainer workflow
+
+If canonical templates change, refresh the bundled plugin copies from the repository root with:
+
+```bash
+uv run python scripts/sync_plugin_templates.py
+```
+
+Validate the refresh with:
+
+```bash
+uv run --extra test python -m pytest tests/
 ```
 
 ## Scope note
