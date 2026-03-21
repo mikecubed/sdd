@@ -27,10 +27,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - **Required**: `plan.md`, `spec.md`
    - **Optional**: `data-model.md`, `contracts/`, `research.md`
 
-4. **Get the tasks template**:
-   ```bash
-   sdd template tasks
-   ```
+4. **Load the bundled tasks template** from `templates/tasks.md`.
 
 5. **Generate the task list** organized by user story. Every task must follow:
    ```

@@ -5,16 +5,7 @@ import json
 import tomllib
 from pathlib import Path
 
-from sdd_cli.agents import (
-    CLAUDE_PLAN_MD,
-    CLAUDE_SKILL_MD,
-    CLAUDE_SPECIFY_MD,
-    CLAUDE_TASKS_MD,
-    COPILOT_PLAN_MD,
-    COPILOT_SKILL_MD,
-    COPILOT_SPECIFY_MD,
-    COPILOT_TASKS_MD,
-)
+from sdd_cli.agents import CLAUDE_SKILL_MD, COPILOT_SKILL_MD
 from sdd_cli.templates import get_template
 
 
@@ -25,6 +16,28 @@ PLUGIN_TEMPLATE_PATHS = {
     "specification-checklist": PLUGIN_ROOT / "templates" / "specification-checklist.md",
     "plan": PLUGIN_ROOT / "templates" / "plan.md",
     "tasks": PLUGIN_ROOT / "templates" / "tasks.md",
+}
+PLUGIN_PROMPT_PATHS = {
+    "claude-specify": PLUGIN_ROOT / "commands" / "sdd.specify.md",
+    "claude-plan": PLUGIN_ROOT / "commands" / "sdd.plan.md",
+    "claude-tasks": PLUGIN_ROOT / "commands" / "sdd.tasks.md",
+    "copilot-specify": PLUGIN_ROOT / "agents" / "sdd.specify.md",
+    "copilot-plan": PLUGIN_ROOT / "agents" / "sdd.plan.md",
+    "copilot-tasks": PLUGIN_ROOT / "agents" / "sdd.tasks.md",
+}
+PLUGIN_PROMPT_TEMPLATE_REFS = {
+    "claude-specify": [
+        "templates/specification.md",
+        "templates/specification-checklist.md",
+    ],
+    "claude-plan": ["templates/plan.md"],
+    "claude-tasks": ["templates/tasks.md"],
+    "copilot-specify": [
+        "templates/specification.md",
+        "templates/specification-checklist.md",
+    ],
+    "copilot-plan": ["templates/plan.md"],
+    "copilot-tasks": ["templates/tasks.md"],
 }
 
 
@@ -84,18 +97,20 @@ class TestSharedPluginBundle:
 
 
 class TestSharedPluginContent:
-    def test_claude_plugin_assets_match_embedded_assets(self):
-        assert (PLUGIN_ROOT / "commands" / "sdd.specify.md").read_text(encoding="utf-8") == CLAUDE_SPECIFY_MD
-        assert (PLUGIN_ROOT / "commands" / "sdd.plan.md").read_text(encoding="utf-8") == CLAUDE_PLAN_MD
-        assert (PLUGIN_ROOT / "commands" / "sdd.tasks.md").read_text(encoding="utf-8") == CLAUDE_TASKS_MD
+    def test_plugin_prompt_assets_use_bundled_templates(self):
+        for prompt_name, path in PLUGIN_PROMPT_PATHS.items():
+            content = path.read_text(encoding="utf-8")
+
+            assert "sdd template" not in content
+            for template_reference in PLUGIN_PROMPT_TEMPLATE_REFS[prompt_name]:
+                assert template_reference in content
+
+    def test_claude_plugin_skill_matches_embedded_asset(self):
         assert (
             PLUGIN_ROOT / "skills" / "sdd-feature-workflow" / "SKILL.md"
         ).read_text(encoding="utf-8") == CLAUDE_SKILL_MD
 
-    def test_copilot_plugin_assets_match_embedded_assets(self):
-        assert (PLUGIN_ROOT / "agents" / "sdd.specify.md").read_text(encoding="utf-8") == COPILOT_SPECIFY_MD
-        assert (PLUGIN_ROOT / "agents" / "sdd.plan.md").read_text(encoding="utf-8") == COPILOT_PLAN_MD
-        assert (PLUGIN_ROOT / "agents" / "sdd.tasks.md").read_text(encoding="utf-8") == COPILOT_TASKS_MD
+    def test_copilot_plugin_skill_matches_embedded_asset(self):
         assert (
             PLUGIN_ROOT / "copilot-skills" / "sdd-feature-workflow" / "SKILL.md"
         ).read_text(encoding="utf-8") == COPILOT_SKILL_MD
