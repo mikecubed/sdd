@@ -11,12 +11,6 @@ from sdd_cli.templates import get_template
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "sdd-workflow"
-PLUGIN_TEMPLATE_PATHS = {
-    "specification": PLUGIN_ROOT / "templates" / "specification.md",
-    "specification-checklist": PLUGIN_ROOT / "templates" / "specification-checklist.md",
-    "plan": PLUGIN_ROOT / "templates" / "plan.md",
-    "tasks": PLUGIN_ROOT / "templates" / "tasks.md",
-}
 PLUGIN_PROMPT_PATHS = {
     "claude-specify": PLUGIN_ROOT / "commands" / "sdd.specify.md",
     "claude-plan": PLUGIN_ROOT / "commands" / "sdd.plan.md",
@@ -25,19 +19,13 @@ PLUGIN_PROMPT_PATHS = {
     "copilot-plan": PLUGIN_ROOT / "agents" / "sdd.plan.md",
     "copilot-tasks": PLUGIN_ROOT / "agents" / "sdd.tasks.md",
 }
-PLUGIN_PROMPT_TEMPLATE_REFS = {
-    "claude-specify": [
-        "../templates/specification.md",
-        "../templates/specification-checklist.md",
-    ],
-    "claude-plan": ["../templates/plan.md"],
-    "claude-tasks": ["../templates/tasks.md"],
-    "copilot-specify": [
-        "../templates/specification.md",
-        "../templates/specification-checklist.md",
-    ],
-    "copilot-plan": ["../templates/plan.md"],
-    "copilot-tasks": ["../templates/tasks.md"],
+PLUGIN_PROMPT_TEMPLATE_NAMES = {
+    "claude-specify": ["specification", "specification-checklist"],
+    "claude-plan": ["plan"],
+    "claude-tasks": ["tasks"],
+    "copilot-specify": ["specification", "specification-checklist"],
+    "copilot-plan": ["plan"],
+    "copilot-tasks": ["tasks"],
 }
 
 
@@ -97,14 +85,15 @@ class TestSharedPluginBundle:
 
 
 class TestSharedPluginContent:
-    def test_plugin_prompt_assets_use_bundled_templates(self):
+    def test_plugin_prompt_assets_inline_canonical_templates(self):
         for prompt_name, path in PLUGIN_PROMPT_PATHS.items():
             content = path.read_text(encoding="utf-8")
 
             assert "sdd template" not in content
-            for template_reference in PLUGIN_PROMPT_TEMPLATE_REFS[prompt_name]:
-                assert template_reference in content
-                assert (path.parent / template_reference).resolve().exists()
+            assert "../templates/" not in content
+            assert "templates/" not in content
+            for template_name in PLUGIN_PROMPT_TEMPLATE_NAMES[prompt_name]:
+                assert get_template(template_name) in content
 
     def test_claude_plugin_skill_matches_embedded_asset(self):
         assert (
@@ -116,26 +105,24 @@ class TestSharedPluginContent:
             PLUGIN_ROOT / "copilot-skills" / "sdd-feature-workflow" / "SKILL.md"
         ).read_text(encoding="utf-8") == COPILOT_SKILL_MD
 
-    def test_bundled_template_files_exist(self):
-        for path in PLUGIN_TEMPLATE_PATHS.values():
-            assert path.exists()
+    def test_plugin_bundle_no_longer_ships_template_directory(self):
+        assert not (PLUGIN_ROOT / "templates").exists()
 
-    def test_bundled_template_files_match_canonical_templates(self):
-        for template_name, path in PLUGIN_TEMPLATE_PATHS.items():
-            assert path.read_text(encoding="utf-8") == get_template(template_name)
-
-    def test_sync_helper_rewrites_templates_deterministically(self, tmp_path):
+    def test_sync_helper_rewrites_prompt_assets_deterministically(self, tmp_path):
         module = _load_sync_module()
         plugin_root = tmp_path / "plugins" / "sdd-workflow"
-        templates_dir = plugin_root / "templates"
-        templates_dir.mkdir(parents=True)
+        expected_relative_paths = [path.relative_to(PLUGIN_ROOT) for path in PLUGIN_PROMPT_PATHS.values()]
 
-        for path in PLUGIN_TEMPLATE_PATHS.values():
-            (templates_dir / path.name).write_text("stale content\n", encoding="utf-8")
+        for relative_path in expected_relative_paths:
+            output_path = plugin_root / relative_path
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text("stale content\n", encoding="utf-8")
 
         rewritten_paths = module.sync_plugin_templates(plugin_root)
 
-        assert [path.name for path in rewritten_paths] == [path.name for path in PLUGIN_TEMPLATE_PATHS.values()]
+        assert [path.relative_to(plugin_root) for path in rewritten_paths] == expected_relative_paths
 
-        for template_name, path in PLUGIN_TEMPLATE_PATHS.items():
-            assert (templates_dir / path.name).read_text(encoding="utf-8") == get_template(template_name)
+        for relative_path in expected_relative_paths:
+            assert (plugin_root / relative_path).read_text(encoding="utf-8") == (
+                PLUGIN_ROOT / relative_path
+            ).read_text(encoding="utf-8")

@@ -47,7 +47,7 @@ sdd init
 
 Use the repository-hosted plugin bundle when you want the workflow available across multiple projects without writing `.claude/` or `.github/` files into each repo.
 
-The plugin bundle is self-contained for template access: Claude Code and GitHub Copilot CLI read the bundled prompt assets and `templates/*.md` files directly, so plugin runtime does not require the `sdd` binary on `PATH`.
+The plugin bundle is self-contained at runtime: Claude Code and GitHub Copilot CLI use generated prompt assets with the canonical templates inlined, so plugin runtime does not require the `sdd` binary on `PATH`.
 
 ### Claude Code
 
@@ -113,7 +113,7 @@ Then select `sdd.specify`, `sdd.plan`, or `sdd.tasks` from `/agent` and enter yo
 
 See `docs/plugin-distribution.md` for the full direct-vs-plugin guidance and local validation steps.
 
-If you update canonical templates in `src/sdd_cli/templates.py`, refresh the bundled plugin copies from the repository root with:
+If you update canonical templates in `src/sdd_cli/templates.py` or the direct-install prompt sources in `src/sdd_cli/agents.py`, regenerate the repository-hosted plugin prompt assets from the repository root with:
 
 ```bash
 uv run python scripts/sync_plugin_templates.py

@@ -16,7 +16,7 @@ For the broader maintainer validation path, run the full test suite:
 uv run --extra test python -m pytest tests/
 ```
 
-If template sources changed in `src/sdd_cli/templates.py`, refresh the bundled copies first:
+If canonical templates in `src/sdd_cli/templates.py` or direct-install prompt sources in `src/sdd_cli/agents.py` changed, regenerate the plugin prompt assets first:
 
 ```bash
 uv run python scripts/sync_plugin_templates.py
@@ -43,7 +43,7 @@ uv run python scripts/sync_plugin_templates.py
    /sdd-workflow:sdd.specify Add user authentication
    ```
 
-4. Confirm the workflow renders the bundled template content successfully even though `sdd` is absent from `PATH`.
+4. Confirm the workflow renders the inlined canonical template content successfully even though `sdd` is absent from `PATH`.
 
 ## GitHub Copilot CLI
 
@@ -70,7 +70,7 @@ uv run python scripts/sync_plugin_templates.py
 
 4. Use `/agent`, select `sdd.specify`, and enter a prompt such as `Add user authentication`.
 
-5. Confirm the selected workflow runs successfully with `sdd` absent from `PATH`, proving the installed plugin reads bundled templates directly.
+5. Confirm the selected workflow runs successfully with `sdd` absent from `PATH`, proving the installed plugin uses the inlined canonical templates directly.
 
 6. If you edit the local plugin, reinstall it to refresh Copilot CLI's cached copy:
 

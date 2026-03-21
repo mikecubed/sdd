@@ -66,7 +66,7 @@ Local checkout testing:
 claude --plugin-dir ./plugins/sdd-workflow
 ```
 
-The bundle is self-contained for template access. Claude loads prompt assets and `templates/*.md` directly from `plugins/sdd-workflow/`, so runtime execution does not require `sdd` on `PATH`.
+The bundle is self-contained at runtime. Claude loads generated prompt assets from `plugins/sdd-workflow/` with the canonical templates already inlined, so runtime execution does not require `sdd` on `PATH`.
 
 The Claude commands are namespaced under the plugin name:
 
@@ -98,7 +98,7 @@ Local checkout testing:
 copilot plugin install ./plugins/sdd-workflow
 ```
 
-The installed Copilot plugin is also self-contained for template access and does not shell out to `sdd template ...` at runtime.
+The installed Copilot plugin is also self-contained at runtime and does not shell out to `sdd template ...` or load separate bundled template files.
 
 After installation, verify the plugin is loaded:
 
@@ -148,11 +148,11 @@ plugins/sdd-workflow/
   docs/
 ```
 
-Bundled template files are included under `plugins/sdd-workflow/templates/` so both plugin runtimes can resolve workflow templates without depending on the CLI binary.
+The shared bundle keeps only generated prompt assets under `commands/` and `agents/`; each prompt carries the current canonical template content inline.
 
 ## Maintainer workflow
 
-If canonical templates change, refresh the bundled plugin copies from the repository root with:
+If canonical templates or direct-install prompt sources change, regenerate the plugin prompt assets from the repository root with:
 
 ```bash
 uv run python scripts/sync_plugin_templates.py

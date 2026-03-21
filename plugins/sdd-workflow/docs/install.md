@@ -1,6 +1,6 @@
 # Install the sdd-workflow plugin
 
-The plugin bundle is self-contained at runtime. After installation, Claude Code and GitHub Copilot read workflow prompts and templates from `plugins/sdd-workflow/`; they do not invoke `sdd template ...` or require the `sdd` binary on `PATH`.
+The plugin bundle is self-contained at runtime. After installation, Claude Code and GitHub Copilot read generated workflow prompts from `plugins/sdd-workflow/`; those prompt assets carry the canonical templates inline, so they do not invoke `sdd template ...` or require the `sdd` binary on `PATH`.
 
 ## Claude Code
 
@@ -42,7 +42,7 @@ Then run:
 /sdd-workflow:sdd.specify Add user authentication
 ```
 
-and confirm the workflow opens the bundled `templates/specification.md` content without any dependency on a local `sdd` executable.
+and confirm the workflow opens the inlined canonical specification template content without any dependency on a local `sdd` executable.
 
 ## GitHub Copilot CLI
 

@@ -8,7 +8,7 @@ It is intended for:
 - GitHub Copilot CLI plugin installation
 - local validation before wider marketplace use
 
-The bundle is self-contained for runtime template access. Claude Code and GitHub Copilot load the workflow from the files in this directory, so the installed plugin does not need the `sdd` binary on `PATH` to read spec, plan, or task templates.
+The bundle is self-contained at runtime. Claude Code and GitHub Copilot load the workflow from the files in this directory, and the generated prompt assets already include the canonical spec, plan, tasks, and checklist templates inline.
 
 ## Contents
 
@@ -22,8 +22,6 @@ agents/
 docs/
 ```
 
-The bundled template payload lives under `templates/` and is referenced directly by the Claude and Copilot prompt assets.
-
 ## Install
 
 See `docs/install.md`.
@@ -34,7 +32,7 @@ See `docs/testing.md`.
 
 ## Maintainer refresh workflow
 
-When the canonical templates in `src/sdd_cli/templates.py` change, refresh the bundled plugin copies from the repository root with:
+When the canonical templates in `src/sdd_cli/templates.py` or the direct-install prompt sources in `src/sdd_cli/agents.py` change, regenerate the plugin prompt assets from the repository root with:
 
 ```bash
 uv run python scripts/sync_plugin_templates.py
