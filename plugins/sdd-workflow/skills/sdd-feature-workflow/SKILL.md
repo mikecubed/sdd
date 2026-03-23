@@ -16,6 +16,6 @@ Activate this skill when the user's message matches patterns like:
 When triggered:
 
 1. Recognize the user wants to build something new
-2. Ask: "Would you like to start with a feature specification? Running `/sdd.specify` will create a structured spec with user stories and requirements — this usually leads to better implementations. Or I can proceed directly."
-3. If the user agrees: run `/sdd.specify` with their feature description
+2. Ask: "Would you like to start with a feature specification? Running `/sdd-workflow:sdd.specify` will create a structured spec with user stories and requirements — this usually leads to better implementations. Or I can proceed directly."
+3. If the user agrees: run `/sdd-workflow:sdd.specify` with their feature description
 4. If the user declines: proceed with the original request without blocking
